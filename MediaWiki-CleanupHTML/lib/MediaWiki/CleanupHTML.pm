@@ -1,20 +1,25 @@
 package MediaWiki::CleanupHTML;
 
-use 5.006;
+use 5.008;
+
 use strict;
 use warnings;
 
+use HTML::TreeBuilder::XPath;
+use Scalar::Util (qw(blessed));
+
 =head1 NAME
 
-MediaWiki::CleanupHTML - The great new MediaWiki::CleanupHTML!
+MediaWiki::CleanupHTML - cleanup the MediaWiki-generated HTML from MediaWiki
+embellishments.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0.1
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0.1';
 
 
 =head1 SYNOPSIS
@@ -25,33 +30,199 @@ Perhaps a little code snippet.
 
     use MediaWiki::CleanupHTML;
 
-    my $foo = MediaWiki::CleanupHTML->new();
-    ...
+    open my $fh, '<:encoding(UTF-8)', $filename
+        or die "Cannot open '$filename' - $!";
 
-=head1 EXPORT
+    my $cleaner = MediaWiki::CleanupHTML->new({ fh => $fh });
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+    open my $out_fh, '>:encoding(UTF-8)', $processed_filename
+        or die "Cannot open '$processed_filename' for output - $!";
+
+    $cleaner->print_into_fh($out_fh);
+
+    $cleaner->destroy_resources();
 
 =head1 SUBROUTINES/METHODS
 
-=head2 function1
+=head2 MediaWiki::CleanupHTML->new({fh => $fh})
+
+The constructor - accepts the filehandle from which to read the XHTML.
 
 =cut
 
-sub function1 {
+sub new
+{
+    my $class = shift;
+
+    my $self = bless {}, $class;
+
+    $self->_init(@_);
+
+    return $self;
 }
 
-=head2 function2
+sub _is_processed
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_is_processed} = shift;
+    }
+
+    return $self->{_is_processed};
+}
+
+sub _fh
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_fh} = shift;
+    }
+
+    return $self->{_fh};
+}
+
+sub _tree
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_tree} = shift;
+    }
+
+    return $self->{_tree};
+}
+
+sub _init
+{
+    my ($self, $args) = @_;
+
+    if (!exists($args->{'fh'}))
+    {
+        Carp::confess("MediaWiki::CleanupHTML->new was not passed a filehandle.");
+    }
+
+    $self->_fh($args->{fh});
+
+    my $tree = HTML::TreeBuilder::XPath->new;
+
+    $self->_tree($tree);
+
+    $self->_tree->parse_file($self->_fh);
+
+    $self->_is_processed(0);
+
+    return;
+}
+
+
+sub _process
+{
+    my $self = shift;
+
+    if ($self->_is_processed())
+    {
+        return;
+    }
+
+    my $tree = $self->_tree;
+
+    {
+        my @nodes = $tree->findnodes( '//div[@class="editsection"]' );
+
+        foreach my $n (@nodes)
+        {
+            $n->detach();
+            $n->delete();
+        }
+    }
+
+    {
+        my @nodes = map { $tree->findnodes( '//h' . $_ ) } (2 .. 4);
+
+        foreach my $h2 (@nodes)
+        {
+            my $a_tag = $h2->left();
+            if (blessed($a_tag) && $a_tag->tag() eq "a" && $a_tag->attr('name'))
+            {
+                my $id = $a_tag->attr('name');
+                $h2->attr('id', $id);
+                $a_tag->detach();
+                $a_tag->delete();
+            }
+        }
+    }
+
+    my (@divs_to_delete) = 
+    (
+        $tree->findnodes('//div[@class="printfooter"]'),
+        $tree->findnodes('//div[@id="catlinks"]'),
+        $tree->findnodes('//div[@class="visualClear"]'),
+        $tree->findnodes('//div[@id="column-one"]'),
+        $tree->findnodes('//div[@id="footer"]'),
+        $tree->findnodes('//head//style'),
+        $tree->findnodes('//script'),
+    );
+
+    foreach my $div (@divs_to_delete)
+    {
+        $div->detach();
+        $div->delete();
+    }
+
+    $self->_is_processed(1);
+
+    return;
+}
+
+=head2 $cleaner->print_into_fh($fh)
+
+Output to a filehandle. The filehandle should be able to process UTF-8 output.
 
 =cut
 
-sub function2 {
+sub print_into_fh
+{
+    my ($self, $fh) = @_;
+
+    $self->_process();
+
+    print {$fh} $self->_tree->as_XML();
+}
+
+=head2 $cleaner->destroy_resources()
+
+Destroy the allocated resources (of the L<HTML::TreeBuilder> tree, etc.). Must
+be called before destruction.
+
+=cut
+
+sub destroy_resources
+{
+    my $self = shift;
+
+    $self->_tree->delete();
+    $self->_tree(undef());
+
+    return;
+}
+
+sub DESTROY
+{
+    my $self = shift;
+
+    $self->destroy_resources();
+
+    return;
 }
 
 =head1 AUTHOR
 
-Shlomi Fish, C<< <shlomif at cpan.org> >>
+Shlomi Fish, L<http://www.shlomifish.org/> .
 
 =head1 BUGS
 

@@ -9,6 +9,8 @@ my $builder = Module::Build->new(
     dist_author         => q{Shlomi Fish <shlomif@cpan.org>},
     dist_version_from   => 'lib/MediaWiki/CleanupHTML.pm',
     build_requires => {
+        'HTML::TreeBuilder::XPath' => 0,
+        'Scalar::Util' => 0,
         'Test::More' => 0,
     },
     requires => {
