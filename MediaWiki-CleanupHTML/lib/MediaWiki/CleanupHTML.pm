@@ -24,10 +24,6 @@ our $VERSION = '0.0.1';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
     use MediaWiki::CleanupHTML;
 
     open my $fh, '<:encoding(UTF-8)', $filename
@@ -41,6 +37,14 @@ Perhaps a little code snippet.
     $cleaner->print_into_fh($out_fh);
 
     $cleaner->destroy_resources();
+
+=head1 DESCRIPTION
+
+The HTML rendered on MediaWiki pages is full of MediaWiki-specific 
+embellishments such as edit sections. This module attempts to clean it up
+and return a more straightforward HTML. Note that the HTML returned by
+MediaWiki APIs may not always available (for instance if the wiki is down), so
+this module should be considered a fallback.
 
 =head1 SUBROUTINES/METHODS
 
@@ -230,9 +234,6 @@ Please report any bugs or feature requests to C<bug-mediawiki-cleanuphtml at rt.
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MediaWiki-CleanupHTML>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-
-
-
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
@@ -262,9 +263,10 @@ L<http://search.cpan.org/dist/MediaWiki-CleanupHTML/>
 
 =back
 
-
 =head1 ACKNOWLEDGEMENTS
 
+The developers of L<HTML::TreeBuilder::XPath>, L<HTML::TreeBuilder> and related
+modules for their helpful code.
 
 =head1 LICENSE AND COPYRIGHT
 
