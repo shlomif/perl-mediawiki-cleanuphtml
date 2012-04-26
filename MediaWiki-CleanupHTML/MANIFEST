@@ -1,13 +1,15 @@
 Build.PL
 Changes
 lib/MediaWiki/CleanupHTML.pm
+Makefile.PL
 MANIFEST			This list of files
+META.json
+META.yml
 README
 t/00-load.t
+t/data/English-Wikipedia-Perl-Page-2012-04-26.html
 t/manifest.t
+TODO
 t/pod-coverage.t
 t/pod.t
-Makefile.PL
-META.yml
-META.json
-TODO
+t/system.t
