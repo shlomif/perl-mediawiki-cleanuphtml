@@ -12,4 +12,5 @@ t/manifest.t
 TODO
 t/pod-coverage.t
 t/pod.t
+t/style-trailing-space.t
 t/system.t

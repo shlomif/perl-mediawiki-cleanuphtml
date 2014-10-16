@@ -21,11 +21,11 @@ use MediaWiki::CleanupHTML;
         or die "Cannot write to out_buffer - $!";
 
     $cleaner->print_into_fh($out_fh);
-   
+
     $cleaner->destroy_resources();
 
     # TEST
-    ok(1, "Success."); 
+    ok(1, "Success.");
 
 }
 

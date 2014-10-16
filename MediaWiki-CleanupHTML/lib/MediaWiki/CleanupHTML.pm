@@ -40,7 +40,7 @@ our $VERSION = '0.0.1';
 
 =head1 DESCRIPTION
 
-The HTML rendered on MediaWiki pages is full of MediaWiki-specific 
+The HTML rendered on MediaWiki pages is full of MediaWiki-specific
 embellishments such as edit sections. This module attempts to clean it up
 and return a more straightforward HTML. Note that the HTML returned by
 MediaWiki APIs may not always available (for instance if the wiki is down), so
@@ -161,7 +161,7 @@ sub _process
         }
     }
 
-    my (@divs_to_delete) = 
+    my (@divs_to_delete) =
     (
         $tree->findnodes('//div[@class="printfooter"]'),
         $tree->findnodes('//div[@id="catlinks"]'),
