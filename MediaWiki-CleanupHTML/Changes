@@ -1,4 +1,8 @@
 Revision history for MediaWiki-CleanupHTML
 
-0.01    Tue Apr 24 22:02:02 IDT 2012
+0.0.2   Thu 16 Oct 13:21:59 IDT 2014
+        * Remove trailing space.
+        * Add configure_requires.
+
+0.0.1   Tue Apr 24 22:02:02 IDT 2012
         First version, released on an unsuspecting world.
