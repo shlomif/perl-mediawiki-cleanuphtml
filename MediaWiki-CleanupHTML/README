@@ -1,7 +1,7 @@
 MediaWiki-CleanupHTML
 
-MediaWiki aims to clean up the raw HTML displayed by MediaWiki out of its
-many embellishments and return a more straightforward HTML.
+MediaWiki-CleanupHTML aims to clean up the raw HTML displayed by MediaWiki out
+of its many embellishments and return a more straightforward HTML.
 
 INSTALLATION
 
