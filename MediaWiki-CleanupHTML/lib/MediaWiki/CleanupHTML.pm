@@ -245,6 +245,10 @@ You can also look for information at:
 
 =over 4
 
+=item * MetaCPAN
+
+L<http://metacpan.org/release/MediaWiki-CleanupHTML>
+
 =item * RT: CPAN's request tracker (report bugs here)
 
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MediaWiki-CleanupHTML>
@@ -256,10 +260,6 @@ L<http://annocpan.org/dist/MediaWiki-CleanupHTML>
 =item * CPAN Ratings
 
 L<http://cpanratings.perl.org/d/MediaWiki-CleanupHTML>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/MediaWiki-CleanupHTML/>
 
 =back
 
