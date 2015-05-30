@@ -1,8 +1,12 @@
 Revision history for MediaWiki-CleanupHTML
 
-0.0.2   Thu 16 Oct 13:21:59 IDT 2014
-        * Remove trailing space.
-        * Add configure_requires.
+0.0.3   2015-05-30
+        - Convert to Dist-Zilla.
+            - Some improvements such as links to resources/VCS-repositories.
 
-0.0.1   Tue Apr 24 22:02:02 IDT 2012
+0.0.2   2014-10-16
+        - Remove trailing space.
+        - Add configure_requires.
+
+0.0.1   2012-04-24
         First version, released on an unsuspecting world.
