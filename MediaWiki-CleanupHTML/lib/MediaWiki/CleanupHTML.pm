@@ -13,14 +13,9 @@ use Scalar::Util (qw(blessed));
 MediaWiki::CleanupHTML - cleanup the MediaWiki-generated HTML from MediaWiki
 embellishments.
 
-=head1 VERSION
-
-Version 0.0.3
-
 =cut
 
-our $VERSION = '0.0.3';
-
+our $VERSION = 'v0.0.3';
 
 =head1 SYNOPSIS
 
