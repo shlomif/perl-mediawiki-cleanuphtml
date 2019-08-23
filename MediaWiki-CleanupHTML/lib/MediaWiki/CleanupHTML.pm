@@ -15,8 +15,6 @@ embellishments.
 
 =cut
 
-our $VERSION = 'v0.0.3';
-
 =head1 SYNOPSIS
 
     use MediaWiki::CleanupHTML;
@@ -98,32 +96,32 @@ sub _tree
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    if (!exists($args->{'fh'}))
+    if ( !exists( $args->{'fh'} ) )
     {
-        Carp::confess("MediaWiki::CleanupHTML->new was not passed a filehandle.");
+        Carp::confess(
+            "MediaWiki::CleanupHTML->new was not passed a filehandle.");
     }
 
-    $self->_fh($args->{fh});
+    $self->_fh( $args->{fh} );
 
     my $tree = HTML::TreeBuilder::XPath->new;
 
     $self->_tree($tree);
 
-    $self->_tree->parse_file($self->_fh);
+    $self->_tree->parse_file( $self->_fh );
 
     $self->_is_processed(0);
 
     return;
 }
 
-
 sub _process
 {
     my $self = shift;
 
-    if ($self->_is_processed())
+    if ( $self->_is_processed() )
     {
         return;
     }
@@ -131,7 +129,7 @@ sub _process
     my $tree = $self->_tree;
 
     {
-        my @nodes = $tree->findnodes( '//div[@class="editsection"]' );
+        my @nodes = $tree->findnodes('//div[@class="editsection"]');
 
         foreach my $n (@nodes)
         {
@@ -141,23 +139,24 @@ sub _process
     }
 
     {
-        my @nodes = map { $tree->findnodes( '//h' . $_ ) } (2 .. 4);
+        my @nodes = map { $tree->findnodes( '//h' . $_ ) } ( 2 .. 4 );
 
         foreach my $h2 (@nodes)
         {
             my $a_tag = $h2->left();
-            if (blessed($a_tag) && $a_tag->tag() eq "a" && $a_tag->attr('name'))
+            if (   blessed($a_tag)
+                && $a_tag->tag() eq "a"
+                && $a_tag->attr('name') )
             {
                 my $id = $a_tag->attr('name');
-                $h2->attr('id', $id);
+                $h2->attr( 'id', $id );
                 $a_tag->detach();
                 $a_tag->delete();
             }
         }
     }
 
-    my (@divs_to_delete) =
-    (
+    my (@divs_to_delete) = (
         $tree->findnodes('//div[@class="printfooter"]'),
         $tree->findnodes('//div[@id="catlinks"]'),
         $tree->findnodes('//div[@class="visualClear"]'),
@@ -186,7 +185,7 @@ Output to a filehandle. The filehandle should be able to process UTF-8 output.
 
 sub print_into_fh
 {
-    my ($self, $fh) = @_;
+    my ( $self, $fh ) = @_;
 
     $self->_process();
 
@@ -205,7 +204,7 @@ sub destroy_resources
     my $self = shift;
 
     $self->_tree->delete();
-    $self->_tree(undef());
+    $self->_tree( undef() );
 
     return;
 }
@@ -267,7 +266,7 @@ modules for their helpful code.
 
 Copyright 2012 Shlomi Fish.
 
-This program is distributed under the MIT (X11) License:
+This program is distributed under the MIT / Expat License:
 L<http://www.opensource.org/licenses/mit-license.php>
 
 Permission is hereby granted, free of charge, to any person
@@ -291,7 +290,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-
 =cut
 
-1; # End of MediaWiki::CleanupHTML
+1;    # End of MediaWiki::CleanupHTML
