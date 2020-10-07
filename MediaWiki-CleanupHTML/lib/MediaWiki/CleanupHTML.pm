@@ -5,8 +5,8 @@ use 5.008;
 use strict;
 use warnings;
 
-use HTML::TreeBuilder::XPath;
-use Scalar::Util (qw(blessed));
+use HTML::TreeBuilder::XPath ();
+use Scalar::Util             (qw(blessed));
 
 =head1 NAME
 
@@ -203,8 +203,11 @@ sub destroy_resources
 {
     my $self = shift;
 
-    $self->_tree->delete();
-    $self->_tree( undef() );
+    if ( defined( $self->_tree() ) )
+    {
+        $self->_tree->delete();
+        $self->_tree( undef() );
+    }
 
     return;
 }
